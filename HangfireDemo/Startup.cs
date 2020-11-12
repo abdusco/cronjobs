@@ -23,8 +23,8 @@ namespace HangfireDemo
         {
             services.Configure<HangfireConfig>(Configuration.GetSection(HangfireConfig.Key));
             services.AddHttpClient();
-            
-            // services.AddHostedService<JobBroadcasterService>();
+
+            services.AddHostedService<JobBroadcasterService>();
             services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
             services.AddTransient<CreateReport>();
             services.AddSingleton<IJobFactory, JobFactory>();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -19,36 +18,49 @@ namespace HangfireDemo
         Task BroadcastAsync(params JobDescription[] jobs);
     }
 
+    public sealed record JobBroadcast(string Application, string Environment, IEnumerable<JobDescription> Jobs);
+
     public class HangfireJobBroadcaster : IJobBroadcaster
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly string _endpoint;
+        private readonly HangfireConfig _config;
+        private readonly IHostEnvironment _environment;
 
-        public HangfireJobBroadcaster(IOptions<HangfireConfig> config, IHttpClientFactory httpClientFactory)
+        public HangfireJobBroadcaster(IOptions<HangfireConfig> config, IHttpClientFactory httpClientFactory,
+            IHostEnvironment environment)
         {
+            _config = config.Value;
             _httpClientFactory = httpClientFactory;
-            _endpoint = config.Value.RegistrationEndpoint;
+            _environment = environment;
         }
 
         public async Task BroadcastAsync(params JobDescription[] jobs)
         {
             using var http = _httpClientFactory.CreateClient();
-            var res = await http.PostAsJsonAsync(_endpoint, jobs);
+            http.Timeout = TimeSpan.FromSeconds(_config.Timeout);
+
+            var payload = new JobBroadcast(
+                _environment.ApplicationName,
+                _environment.EnvironmentName,
+                jobs
+            );
+
+            var res = await http.PostAsJsonAsync(_config.RegistrationEndpoint, payload);
             res.EnsureSuccessStatusCode();
         }
     }
 
     public class JobBroadcasterService : BackgroundService
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEnumerable<IJobProvider> _jobProviders;
         private readonly IJobBroadcaster _broadcaster;
         private readonly ILogger<JobBroadcasterService> _logger;
 
         public JobBroadcasterService(
-            IServiceProvider serviceProvider,
+            IEnumerable<IJobProvider> jobProviders,
             IJobBroadcaster broadcaster, ILogger<JobBroadcasterService> logger)
         {
-            _serviceProvider = serviceProvider;
+            _jobProviders = jobProviders;
             _broadcaster = broadcaster;
             _logger = logger;
         }
@@ -56,7 +68,7 @@ namespace HangfireDemo
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Finding jobs");
-            var jobs = GetJobs();
+            var jobs = _jobProviders.SelectMany(p => p.Jobs).ToArray();
             _logger.LogInformation($"Found {jobs.Length} jobs. Broadcasting all jobs");
             try
             {
@@ -66,14 +78,6 @@ namespace HangfireDemo
             {
                 _logger.LogError(e, $"Cannot broadcast jobs. Got HTTP {e.StatusCode} response");
             }
-        }
-
-        private JobDescription[] GetJobs()
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var jobProviders = scope.ServiceProvider.GetRequiredService<IEnumerable<IJobProvider>>();
-            var jobs = jobProviders.SelectMany(p => p.Jobs).ToArray();
-            return jobs;
         }
     }
 }
