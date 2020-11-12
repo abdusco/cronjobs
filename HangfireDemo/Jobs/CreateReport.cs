@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace HangfireDemo.Jobs
 {
     [Cron("*/1 * * * *")]
-    public class CreateReport : ITriggerableJob
+    public class CreateReport : IJob
     {
         private readonly ILogger<CreateReport> _logger;
 
@@ -20,10 +20,5 @@ namespace HangfireDemo.Jobs
             _logger.LogInformation("creating report...");
             return Task.CompletedTask;
         }
-    }
-
-    public interface ITriggerableJob
-    {
-        Task ExecuteAsync();
     }
 }

@@ -1,19 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HangfireDemo.Jobs;
 using HangfireDemo.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace HangfireDemo
@@ -30,17 +21,17 @@ namespace HangfireDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpContextAccessor();
+            services.Configure<HangfireConfig>(Configuration.GetSection(HangfireConfig.Key));
+            services.AddHttpClient();
+            
+            // services.AddHostedService<JobBroadcasterService>();
+            services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
             services.AddTransient<CreateReport>();
             services.AddSingleton<TriggerableJobFactory>();
-            services.AddScoped<IJobProvider, ControllerActionJobProvider>();
-            services.AddScoped<IJobProvider, TriggerableJobProvider>(provider =>
-            {
-                var request = provider.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Request;
-                var uriBuilder = new UriBuilder(request.GetEncodedUrl()) {Path = "/-/jobs", Query = "", Fragment = ""};
-                return new TriggerableJobProvider(uriBuilder.Uri.ToString());
-            });
-            services.AddTransient<ITriggerableJob, CreateReport>();
+            services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
+            services.AddTransient<IJobProvider, ControllerActionJobProvider>();
+            services.AddTransient<IJobProvider, TriggerableJobProvider>();
+            services.AddTransient<IJob, CreateReport>();
 
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();

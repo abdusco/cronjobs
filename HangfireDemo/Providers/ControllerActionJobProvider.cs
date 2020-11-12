@@ -5,6 +5,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 
 namespace HangfireDemo.Providers
@@ -13,14 +14,14 @@ namespace HangfireDemo.Providers
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorProvider;
         private readonly LinkGenerator _linkGenerator;
-        private readonly HttpContext _httpContext;
 
-        public ControllerActionJobProvider(IActionDescriptorCollectionProvider actionDescriptorProvider,
-            LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor)
+        public ControllerActionJobProvider(
+            IActionDescriptorCollectionProvider actionDescriptorProvider,
+            LinkGenerator linkGenerator
+        )
         {
             _actionDescriptorProvider = actionDescriptorProvider;
             _linkGenerator = linkGenerator;
-            _httpContext = httpContextAccessor.HttpContext;
         }
 
         public IEnumerable<JobDescription> Jobs => GetAllJobs();
@@ -47,8 +48,8 @@ namespace HangfireDemo.Providers
         }
 
         private string GetUriByAction(ControllerActionDescriptor action) =>
-            _linkGenerator.GetUriByAction(
-                _httpContext,
+            _linkGenerator.GetPathByAction(
+                new DefaultHttpContext(),
                 action.RouteValues["action"],
                 action.RouteValues["controller"]
             );

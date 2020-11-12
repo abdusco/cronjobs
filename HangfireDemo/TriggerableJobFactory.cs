@@ -15,17 +15,21 @@ namespace HangfireDemo
             _serviceProvider = serviceProvider;
         }
 
-        public ITriggerableJob Create(string jobName)
+        public IJob Create(string jobName)
         {
             var type = Assembly.GetEntryAssembly()!
                 .GetTypes()
-                .FirstOrDefault(t => t.IsClass && typeof(ITriggerableJob).IsAssignableFrom(t) && t.Name == jobName);
-            if (type == null || !typeof(ITriggerableJob).IsAssignableFrom(type))
+                .FirstOrDefault(t =>
+                    t.IsClass
+                    && typeof(IJob).IsAssignableFrom(t)
+                    && string.Equals(t.Name, jobName, StringComparison.InvariantCultureIgnoreCase));
+            
+            if (type == null)
             {
-                throw new NotImplementedException($"{type} does not implement {nameof(ITriggerableJob)}");
+                throw new NotImplementedException($"{type} does not implement {nameof(IJob)}");
             }
 
-            return (ITriggerableJob) _serviceProvider.GetRequiredService(type);
+            return (IJob) _serviceProvider.GetRequiredService(type);
         }
     }
 }
