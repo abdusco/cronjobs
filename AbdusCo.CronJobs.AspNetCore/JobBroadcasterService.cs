@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace AbdusCo.CronJobs.Core
+namespace AbdusCo.CronJobs.AspNetCore
 {
     public class JobBroadcasterService : BackgroundService
     {
@@ -25,16 +26,18 @@ namespace AbdusCo.CronJobs.Core
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+            
             _logger.LogInformation("Finding jobs");
-            var jobs = _jobProviders.SelectMany(p => p.Jobs).ToArray();
-            _logger.LogInformation($"Found {jobs.Length} jobs. Broadcasting all jobs");
+            var jobs = _jobProviders.SelectMany(p => p.Jobs).ToList();
+            _logger.LogInformation($"Found {jobs.Count} jobs. Broadcasting all jobs");
             try
             {
                 await _broadcaster.BroadcastAsync(jobs);
             }
             catch (HttpRequestException e)
             {
-                _logger.LogError(e, $"Cannot broadcast jobs. Got HTTP {e.StatusCode} response");
+                _logger.LogError(e, $"Cannot broadcast jobs.");
             }
         }
     }

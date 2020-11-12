@@ -1,9 +1,9 @@
-﻿namespace AbdusCo.CronJobs.Core
+﻿namespace AbdusCo.CronJobs.AspNetCore
 {
     public class JobsOptions
     {
         public const string Key = "Jobs";
         public string RegistrationEndpoint { get; set; }
-        public int Timeout { get; set; } = 5;
+        public string UrlTemplate { get; set; }
     }
 }

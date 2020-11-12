@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
-using AbdusCo.CronJobs.Core;
+﻿using System;
+using System.Threading.Tasks;
+using AbdusCo.CronJobs.AspNetCore;
 using Microsoft.Extensions.Logging;
 
 namespace HangfireDemo.Jobs
 {
-    [Cron("*/1 * * * *")]
+    [Cron("*/1 * * * *", "1 1 * * *")]
     public class CreateReport : IJob
     {
         private readonly ILogger<CreateReport> _logger;
@@ -14,10 +15,11 @@ namespace HangfireDemo.Jobs
             _logger = logger;
         }
 
-        public Task ExecuteAsync()
+        public async Task ExecuteAsync()
         {
             _logger.LogInformation("creating report...");
-            return Task.CompletedTask;
+            await Task.Delay(TimeSpan.FromSeconds(10));
+            _logger.LogInformation("created report");
         }
     }
 }

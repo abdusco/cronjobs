@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace AbdusCo.CronJobs.Core
+namespace AbdusCo.CronJobs.AspNetCore
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class CronAttribute : Attribute

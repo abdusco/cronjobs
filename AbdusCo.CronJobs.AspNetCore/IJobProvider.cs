@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AbdusCo.CronJobs.Core
+namespace AbdusCo.CronJobs.AspNetCore
 {
     public interface IJobProvider
     {

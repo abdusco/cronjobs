@@ -1,4 +1,5 @@
-using AbdusCo.CronJobs.Core;
+using System.Net.Sockets;
+using AbdusCo.CronJobs.AspNetCore;
 using HangfireDemo.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,18 +23,11 @@ namespace HangfireDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<JobsOptions>(Configuration.GetSection(JobsOptions.Key));
-            services.AddHttpClient();
-
-            services.AddHostedService<JobBroadcasterService>();
-            services.AddTransient<IJobBroadcaster, JobRegistrationBroadcaster>();
+            services.AddCronJobs();
+            
             services.AddTransient<CreateReport>();
-            services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddTransient<IJobBroadcaster, JobRegistrationBroadcaster>();
-            services.AddTransient<IJobProvider, TriggerableJobProvider>(provider
-                => new TriggerableJobProvider(typeof(Startup).Assembly));
-            services.AddTransient<IJob, CreateReport>();
-
-            services.AddRouting(options => options.LowercaseUrls = true);
+            
+            services.AddRouting();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

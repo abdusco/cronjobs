@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireDemo", "HangfireDem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireServer", "HangfireServer\HangfireServer.csproj", "{62EEA1C8-8C0B-4EF7-904E-6EFCB7402A0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.CronJobs.Core", "AbdusCo.CronJobs.Core\AbdusCo.CronJobs.Core.csproj", "{813223A2-2706-4F21-8381-E92731ED8C0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.CronJobs.AspNetCore", "AbdusCo.CronJobs.AspNetCore\AbdusCo.CronJobs.AspNetCore.csproj", "{813223A2-2706-4F21-8381-E92731ED8C0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

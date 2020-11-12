@@ -4,18 +4,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace AbdusCo.CronJobs.Core
+namespace AbdusCo.CronJobs.AspNetCore
 {
     public class TriggerableJobProvider : IJobProvider
     {
+        private readonly string _urlTemplate;
         private readonly Assembly[] _assemblies;
 
-        public TriggerableJobProvider(params Assembly[] assemblies)
+        public TriggerableJobProvider(string urlTemplate, params Assembly[] assemblies)
         {
+            _urlTemplate = urlTemplate;
             _assemblies = assemblies;
         }
 
-        public TriggerableJobProvider() : this(AppDomain.CurrentDomain.GetAssemblies())
+        public TriggerableJobProvider(string urlTemplate) : this(urlTemplate, AppDomain.CurrentDomain.GetAssemblies())
         {
         }
 
@@ -41,8 +43,11 @@ namespace AbdusCo.CronJobs.Core
             var description = type.GetCustomAttribute<DescriptionAttribute>()?.Description
                               ?? type.FullName;
 
-            return new JobDescription(type.Name, cron.CronExpressions)
+            return new JobDescription
             {
+                Name = type.Name,
+                Endpoint = _urlTemplate.Replace("{name}", type.Name.ToLowerInvariant()),
+                CronExpressions = cron.CronExpressions.ToList(),
                 Description = description
             };
         }

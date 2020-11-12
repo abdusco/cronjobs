@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AbdusCo.CronJobs.Core
+namespace AbdusCo.CronJobs.AspNetCore
 {
     public interface IJobFactory
     {
