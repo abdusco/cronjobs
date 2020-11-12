@@ -29,7 +29,8 @@ namespace HangfireDemo
             services.AddTransient<CreateReport>();
             services.AddSingleton<IJobFactory, JobFactory>();
             services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
-            services.AddTransient<IJobProvider, TriggerableJobProvider>();
+            services.AddTransient<IJobProvider, TriggerableJobProvider>(provider
+                => new TriggerableJobProvider(typeof(Startup).Assembly));
             services.AddTransient<IJob, CreateReport>();
 
             services.AddRouting(options => options.LowercaseUrls = true);

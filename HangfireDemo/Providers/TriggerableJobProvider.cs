@@ -4,25 +4,27 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using HangfireDemo.Jobs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 
 namespace HangfireDemo.Providers
 {
     public class TriggerableJobProvider : IJobProvider
     {
-        private readonly LinkGenerator _linkGenerator;
+        private readonly Assembly[] _assemblies;
 
-        public TriggerableJobProvider(LinkGenerator linkGenerator)
+        public TriggerableJobProvider(params Assembly[] assemblies)
         {
-            _linkGenerator = linkGenerator;
+            _assemblies = assemblies;
+        }
+
+        public TriggerableJobProvider() : this(AppDomain.CurrentDomain.GetAssemblies())
+        {
         }
 
         public IEnumerable<JobDescription> Jobs => GetJobs();
 
         private IEnumerable<JobDescription> GetJobs()
         {
-            return Assembly.GetEntryAssembly()!.GetTypes()
+            return _assemblies.SelectMany(a => a.GetTypes())
                 .Where(t => t.IsClass
                             && typeof(IJob).IsAssignableFrom(t)
                             && t.GetCustomAttribute<CronAttribute>() != null)
@@ -40,14 +42,10 @@ namespace HangfireDemo.Providers
             var description = type.GetCustomAttribute<DescriptionAttribute>()?.Description
                               ?? type.FullName;
 
-            var url = _linkGenerator.GetPathByAction(
-                new DefaultHttpContext(),
-                nameof(JobsController.ExecuteJob),
-                nameof(JobsController).Replace("Controller", ""),
-                new {jobName = type.Name}
-            );
-
-            return new(url, type.Name, description, cron.CronExpressions);
+            return new JobDescription(type.Name, cron.CronExpressions)
+            {
+                Description = description
+            };
         }
     }
 }
