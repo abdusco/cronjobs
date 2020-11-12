@@ -10,11 +10,11 @@ namespace HangfireDemo
     [Route("/-/jobs")]
     public class JobsController : Controller
     {
-        private readonly TriggerableJobFactory _jobFactory;
+        private readonly IJobFactory _jobFactory;
         private readonly IEnumerable<IJobProvider> _jobProviders;
         private readonly ILogger<JobsController> _logger;
 
-        public JobsController(TriggerableJobFactory jobFactory, IEnumerable<IJobProvider> jobProviders,
+        public JobsController(IJobFactory jobFactory, IEnumerable<IJobProvider> jobProviders,
             ILogger<JobsController> logger)
         {
             _jobFactory = jobFactory;

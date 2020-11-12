@@ -6,11 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HangfireDemo
 {
-    public class TriggerableJobFactory
+    public interface IJobFactory
+    {
+        IJob Create(string jobName);
+    }
+
+    public class JobFactory : IJobFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public TriggerableJobFactory(IServiceProvider serviceProvider)
+        public JobFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

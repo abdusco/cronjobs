@@ -27,9 +27,8 @@ namespace HangfireDemo
             // services.AddHostedService<JobBroadcasterService>();
             services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
             services.AddTransient<CreateReport>();
-            services.AddSingleton<TriggerableJobFactory>();
+            services.AddSingleton<IJobFactory, JobFactory>();
             services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
-            services.AddTransient<IJobProvider, ControllerActionJobProvider>();
             services.AddTransient<IJobProvider, TriggerableJobProvider>();
             services.AddTransient<IJob, CreateReport>();
 
