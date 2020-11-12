@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HangfireDemo.Jobs;
+using HangfireDemo.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,7 +33,7 @@ namespace HangfireDemo
             services.AddHttpContextAccessor();
             services.AddTransient<CreateReport>();
             services.AddSingleton<TriggerableJobFactory>();
-            services.AddScoped<IJobProvider, ActionJobProvider>();
+            services.AddScoped<IJobProvider, ControllerActionJobProvider>();
             services.AddScoped<IJobProvider, TriggerableJobProvider>(provider =>
             {
                 var request = provider.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.Request;
