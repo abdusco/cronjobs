@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AbdusCo.CronJobs.Core;
 using Microsoft.Extensions.Logging;
 
 namespace HangfireDemo.Jobs

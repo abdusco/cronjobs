@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using HangfireDemo.Jobs;
 
-namespace HangfireDemo.Providers
+namespace AbdusCo.CronJobs.Core
 {
     public class TriggerableJobProvider : IJobProvider
     {

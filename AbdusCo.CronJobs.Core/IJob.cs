@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace HangfireDemo.Jobs
+namespace AbdusCo.CronJobs.Core
 {
     public interface IJob
     {

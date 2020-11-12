@@ -1,6 +1,6 @@
-﻿namespace HangfireDemo
+﻿namespace AbdusCo.CronJobs.Core
 {
-    public class HangfireConfig
+    public class JobsOptions
     {
         public const string Key = "Jobs";
         public string RegistrationEndpoint { get; set; }

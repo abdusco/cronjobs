@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HangfireDemo
+namespace AbdusCo.CronJobs.Core
 {
     public sealed record JobDescription
     {

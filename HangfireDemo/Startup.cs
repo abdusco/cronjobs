@@ -1,5 +1,5 @@
+using AbdusCo.CronJobs.Core;
 using HangfireDemo.Jobs;
-using HangfireDemo.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,14 +21,14 @@ namespace HangfireDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<HangfireConfig>(Configuration.GetSection(HangfireConfig.Key));
+            services.Configure<JobsOptions>(Configuration.GetSection(JobsOptions.Key));
             services.AddHttpClient();
 
             services.AddHostedService<JobBroadcasterService>();
-            services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
+            services.AddTransient<IJobBroadcaster, JobRegistrationBroadcaster>();
             services.AddTransient<CreateReport>();
             services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddTransient<IJobBroadcaster, HangfireJobBroadcaster>();
+            services.AddTransient<IJobBroadcaster, JobRegistrationBroadcaster>();
             services.AddTransient<IJobProvider, TriggerableJobProvider>(provider
                 => new TriggerableJobProvider(typeof(Startup).Assembly));
             services.AddTransient<IJob, CreateReport>();

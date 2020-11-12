@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using HangfireDemo.Jobs;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HangfireDemo
+namespace AbdusCo.CronJobs.Core
 {
     public interface IJobFactory
     {

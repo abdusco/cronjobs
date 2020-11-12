@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace HangfireDemo
+namespace AbdusCo.CronJobs.Core
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class CronAttribute : Attribute

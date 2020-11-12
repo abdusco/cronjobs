@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HangfireDemo.Providers
+namespace AbdusCo.CronJobs.Core
 {
     public interface IJobProvider
     {
