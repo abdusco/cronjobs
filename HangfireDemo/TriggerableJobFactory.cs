@@ -26,7 +26,7 @@ namespace HangfireDemo
             
             if (type == null)
             {
-                throw new NotImplementedException($"{type} does not implement {nameof(IJob)}");
+                throw new TypeLoadException($"Cannot find any job named {jobName} that implements {nameof(IJob)}");
             }
 
             return (IJob) _serviceProvider.GetRequiredService(type);
