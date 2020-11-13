@@ -1,4 +1,3 @@
-using System.Net.Sockets;
 using AbdusCo.CronJobs.AspNetCore;
 using HangfireDemo.Jobs;
 using Microsoft.AspNetCore.Builder;
@@ -54,9 +53,12 @@ namespace HangfireDemo
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseAuthorization(); 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapCronJobs("/-/jobs");
+                endpoints.MapControllers();
+            });
         }
     }
 }

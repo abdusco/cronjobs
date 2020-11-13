@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using AbdusCo.CronJobs.AspNetCore;
 using Microsoft.Extensions.Logging;

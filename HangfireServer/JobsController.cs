@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AbdusCo.CronJobs.AspNetCore;
 using Hangfire;
-using Hangfire.Common;
 using Hangfire.Storage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

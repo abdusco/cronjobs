@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace HangfireDemo
 {
     [Route("/-/jobs")]
-    public class JobsController : Controller
+    internal class JobsController : Controller
     {
         private readonly IJobFactory _jobFactory;
         private readonly IEnumerable<IJobProvider> _jobProviders;
