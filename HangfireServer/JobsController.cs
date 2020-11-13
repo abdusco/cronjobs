@@ -50,9 +50,9 @@ namespace HangfireServer
                 {
                     var cron = job.CronExpressions[i];
                     var jobKey = MakeKey(job, i);
-                    _jobManager.AddOrUpdate<EndpointTriggerer>(
+                    _jobManager.AddOrUpdate<JobTriggerer>(
                         jobKey,
-                        t => t.Trigger(job.Endpoint),
+                        t => t.Trigger(job),
                         cron,
                         TimeZoneInfo.Local
                     );
