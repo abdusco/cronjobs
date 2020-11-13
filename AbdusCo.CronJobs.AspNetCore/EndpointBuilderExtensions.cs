@@ -25,7 +25,7 @@ namespace AbdusCo.CronJobs.AspNetCore
             {
                 if (!(context.GetRouteValue("name") is string jobName))
                 {
-                    context.Response.StatusCode = 404;
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
                     return Task.CompletedTask;
                 }
 
@@ -40,7 +40,7 @@ namespace AbdusCo.CronJobs.AspNetCore
                     logger.LogInformation($"Finished {job}");
                 });
 
-                context.Response.StatusCode = 200;
+                context.Response.StatusCode = StatusCodes.Status202Accepted;
                 return Task.CompletedTask;
             });
         }
