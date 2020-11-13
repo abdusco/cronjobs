@@ -39,6 +39,8 @@ namespace AbdusCo.CronJobs.AspNetCore
 
             services.AddHostedService<JobBroadcasterService>();
             services.AddSingleton<IJobFactory, JobFactory>();
+            services.AddSingleton<IJobExecutor, CronJobExecutor>();
+            
             if (assemblies.Any())
             {
                 services.AddTransient<IJobProvider, AssemblyScanningJobProvider>(delegate(IServiceProvider provider)

@@ -29,15 +29,13 @@ namespace AbdusCo.CronJobs.AspNetCore
                     return Task.CompletedTask;
                 }
 
-                var logger = context.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JobExecutor");
                 var factory = context.RequestServices.GetRequiredService<IJobFactory>();
+                var executor = context.RequestServices.GetRequiredService<IJobExecutor>();
 
-                context.Response.OnCompleted(async () =>
+                context.Response.OnCompleted(() =>
                 {
                     var job = factory.Create(jobName);
-                    logger.LogInformation($"Executing {job}");
-                    await job.ExecuteAsync(context.RequestAborted);
-                    logger.LogInformation($"Finished {job}");
+                    return executor.ExecuteJobAsync(job, context.RequestAborted);
                 });
 
                 context.Response.StatusCode = StatusCodes.Status202Accepted;
