@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
-    public class JobBroadcasterService : BackgroundService
+    internal class JobBroadcasterService : BackgroundService
     {
         private readonly JobsOptions _options;
         private readonly IEnumerable<IJobProvider> _jobProviders;

@@ -10,7 +10,7 @@ namespace AbdusCo.CronJobs.AspNetCore
         IJob Create(string jobName);
     }
 
-    public class JobFactory : IJobFactory
+    internal class JobFactory : IJobFactory
     {
         private readonly IServiceProvider _serviceProvider;
 

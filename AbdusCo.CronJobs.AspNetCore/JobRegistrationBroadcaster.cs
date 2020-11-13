@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
-    public class JobRegistrationBroadcaster : IJobBroadcaster
+    internal class JobRegistrationBroadcaster : IJobBroadcaster
     {
         private readonly HttpClient _httpClient;
         private readonly IHostEnvironment _environment;
