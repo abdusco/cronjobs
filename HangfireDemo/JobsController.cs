@@ -31,15 +31,13 @@ namespace HangfireDemo
         [HttpPost("{jobName}")]
         public async Task<IActionResult> ExecuteJob(string jobName)
         {
-            var job = _jobFactory.Create(jobName);
-            if (job == null)
+            Response.OnCompleted(async () =>
             {
-                return NotFound();
-            }
-
-            _logger.LogInformation($"Executing {job}");
-            await job.ExecuteAsync();
-            _logger.LogInformation($"Finished {job}");
+                var job = _jobFactory.Create(jobName);
+                _logger.LogInformation($"Executing {job}");
+                await job.ExecuteAsync();
+                _logger.LogInformation($"Finished {job}");
+            });
 
             return Ok();
         }
