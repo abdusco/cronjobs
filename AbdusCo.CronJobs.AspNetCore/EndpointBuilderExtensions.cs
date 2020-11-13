@@ -10,7 +10,7 @@ namespace AbdusCo.CronJobs.AspNetCore
 {
     public static class EndpointRouteBuilderExtensions
     {
-        public static IEndpointRouteBuilder MapCronJobs(this IEndpointRouteBuilder endpoints,
+        public static IEndpointConventionBuilder MapCronJobWebhook(this IEndpointRouteBuilder endpoints,
             string endpoint = "/-/jobs")
         {
             endpoints.MapGet(endpoint, context =>
@@ -20,7 +20,7 @@ namespace AbdusCo.CronJobs.AspNetCore
                 return context.Response.WriteAsJsonAsync(jobs);
             });
 
-            endpoints.MapPost($"{endpoint}/{{name}}", async context =>
+            return endpoints.MapPost($"{endpoint}/{{name}}", async context =>
             {
                 if (!(context.GetRouteValue("name") is string jobName))
                 {
@@ -41,8 +41,6 @@ namespace AbdusCo.CronJobs.AspNetCore
 
                 context.Response.StatusCode = 200;
             });
-
-            return endpoints;
         }
     }
 }

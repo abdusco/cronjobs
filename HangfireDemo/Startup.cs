@@ -57,7 +57,7 @@ namespace HangfireDemo
             app.UseAuthorization(); 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapCronJobs("/-/jobs");
+                endpoints.MapCronJobWebhook("/-/jobs");
                 endpoints.MapControllers();
             });
         }
