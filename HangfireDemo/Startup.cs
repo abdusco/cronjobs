@@ -1,3 +1,4 @@
+using AbdusCo.CronJobs;
 using AbdusCo.CronJobs.AspNetCore;
 using HangfireDemo.Jobs;
 using Microsoft.AspNetCore.Builder;

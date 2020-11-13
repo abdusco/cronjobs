@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AbdusCo.CronJobs.AspNetCore;
+using AbdusCo.CronJobs;
 using Hangfire;
 using Hangfire.Storage;
 using Microsoft.AspNetCore.Mvc;

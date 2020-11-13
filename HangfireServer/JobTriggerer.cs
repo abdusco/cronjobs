@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using AbdusCo.CronJobs.AspNetCore;
+using AbdusCo.CronJobs;
 using Microsoft.Extensions.Logging;
 
 namespace HangfireServer

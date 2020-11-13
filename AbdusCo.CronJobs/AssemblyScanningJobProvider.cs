@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Options;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace AbdusCo.CronJobs
 {
-    internal class AssemblyScanningJobProvider : IJobProvider
+    public class AssemblyScanningJobProvider : IJobProvider
     {
         private readonly string _urlTemplate;
         private readonly Assembly[] _assemblies;

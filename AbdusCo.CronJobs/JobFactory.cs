@@ -3,14 +3,9 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AbdusCo.CronJobs.AspNetCore
+namespace AbdusCo.CronJobs
 {
-    public interface IJobFactory
-    {
-        IJob Create(string jobName);
-    }
-
-    internal class JobFactory : IJobFactory
+    public class JobFactory : IJobFactory
     {
         private readonly IServiceProvider _serviceProvider;
 

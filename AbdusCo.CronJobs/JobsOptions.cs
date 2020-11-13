@@ -1,4 +1,4 @@
-﻿namespace AbdusCo.CronJobs.AspNetCore
+﻿namespace AbdusCo.CronJobs
 {
     public class JobsOptions
     {

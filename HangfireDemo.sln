@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireServer", "HangfireS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.CronJobs.AspNetCore", "AbdusCo.CronJobs.AspNetCore\AbdusCo.CronJobs.AspNetCore.csproj", "{813223A2-2706-4F21-8381-E92731ED8C0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbdusCo.CronJobs", "AbdusCo.CronJobs\AbdusCo.CronJobs.csproj", "{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{813223A2-2706-4F21-8381-E92731ED8C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{813223A2-2706-4F21-8381-E92731ED8C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{813223A2-2706-4F21-8381-E92731ED8C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A633012-EA22-4D8C-BECF-36F16B6FFDA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
