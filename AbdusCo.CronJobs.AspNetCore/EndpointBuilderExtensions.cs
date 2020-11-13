@@ -21,7 +21,7 @@ namespace AbdusCo.CronJobs.AspNetCore
                 return context.Response.WriteAsJsonAsync(jobs);
             });
 
-            return endpoints.MapPost($"{endpoint}/{{name}}", context =>
+            return endpoints.MapPost($"{endpoint}/{{name:required}}", context =>
             {
                 if (!(context.GetRouteValue("name") is string jobName))
                 {
