@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
-    public class TriggerableJobProvider : IJobProvider
+    public class AssemblyScanningJobProvider : IJobProvider
     {
         private readonly string _urlTemplate;
         private readonly Assembly[] _assemblies;
 
-        public TriggerableJobProvider(string urlTemplate, params Assembly[] assemblies)
+        public AssemblyScanningJobProvider(IOptions<JobsOptions> options, params Assembly[] assemblies)
         {
-            _urlTemplate = urlTemplate;
+            _urlTemplate = options.Value.UrlTemplate;
             _assemblies = assemblies;
         }
 
-        public TriggerableJobProvider(string urlTemplate) : this(urlTemplate, AppDomain.CurrentDomain.GetAssemblies())
+        public AssemblyScanningJobProvider(IOptions<JobsOptions> options) : this(options,
+            AppDomain.CurrentDomain.GetAssemblies())
         {
         }
 
@@ -27,8 +29,9 @@ namespace AbdusCo.CronJobs.AspNetCore
         {
             return _assemblies.SelectMany(a => a.GetTypes())
                 .Where(t => t.IsClass
-                            && typeof(IJob).IsAssignableFrom(t)
-                            && t.GetCustomAttribute<CronAttribute>() != null)
+                            && !t.IsAbstract
+                            && t.IsPublic
+                            && typeof(IJob).IsAssignableFrom(t))
                 .Select(CreateJobDescription);
         }
 

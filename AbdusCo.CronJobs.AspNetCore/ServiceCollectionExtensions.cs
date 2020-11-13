@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Polly;
+using Polly.Extensions.Http;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
@@ -19,14 +21,37 @@ namespace AbdusCo.CronJobs.AspNetCore
                 services.Configure(configure);
             }
 
-            services.AddHttpClient<IJobBroadcaster, JobRegistrationBroadcaster>(client =>
-                    client.Timeout = TimeSpan.FromSeconds(3))
-                .AddTransientHttpErrorPolicy(builder => builder.RetryAsync(3));
+
+            services.AddHttpClient<IJobBroadcaster, JobRegistrationBroadcaster>((provider, client) =>
+                {
+                    var options = provider.GetRequiredService<IOptions<JobsOptions>>().Value;
+                    client.BaseAddress = new Uri(options.RegistrationEndpoint);
+                    client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+                })
+                .AddPolicyHandler((provider, _) =>
+                {
+                    var options = provider.GetRequiredService<IOptions<JobsOptions>>().Value;
+                    var builder = HttpPolicyExtensions
+                        .HandleTransientHttpError()
+                        .WaitAndRetryAsync(options.RetryCount, i => TimeSpan.FromSeconds(Math.Pow(2, i)));
+                    return builder;
+                });
 
             services.AddHostedService<JobBroadcasterService>();
             services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddTransient<IJobProvider, TriggerableJobProvider>(provider
-                => new TriggerableJobProvider(provider.GetRequiredService<IOptions<JobsOptions>>().Value.UrlTemplate, assemblies));
+            if (assemblies.Any())
+            {
+                services.AddTransient<IJobProvider, AssemblyScanningJobProvider>(delegate(IServiceProvider provider)
+                {
+                    var options = provider.GetRequiredService<IOptions<JobsOptions>>();
+                    return new AssemblyScanningJobProvider(options, assemblies);
+                });
+            }
+            else
+            {
+                services.AddTransient<IJobProvider, AssemblyScanningJobProvider>();
+            }
+
             return services;
         }
 
