@@ -3,6 +3,7 @@ using AbdusCo.CronJobs.AspNetCore;
 using HangfireDemo.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,10 +25,12 @@ namespace HangfireDemo
         {
             services.Configure<JobsOptions>(Configuration.GetSection(JobsOptions.Key));
             services.AddCronJobs();
-            
+
             services.AddTransient<CreateReport>();
             services.AddTransient<ReallyLongJob>();
-            
+
+            services.AddDbContext<DemoDbContext>(builder => builder.UseInMemoryDatabase(nameof(DemoDbContext)));
+
             services.AddRouting();
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -37,10 +40,11 @@ namespace HangfireDemo
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DemoDbContext db)
         {
             if (env.IsDevelopment())
             {
+                db.Database.EnsureCreated();
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
@@ -54,7 +58,7 @@ namespace HangfireDemo
 
             app.UseRouting();
 
-            app.UseAuthorization(); 
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapCronJobWebhook("/-/jobs");
