@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AbdusCo.CronJobs.AspNetCore;
 using Microsoft.Extensions.Logging;
@@ -15,10 +16,10 @@ namespace HangfireDemo.Jobs
             _logger = logger;
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("creating report...");
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
             _logger.LogInformation("created report");
         }
     }

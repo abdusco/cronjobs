@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using AbdusCo.CronJobs.AspNetCore;
 using Microsoft.Extensions.Logging;
@@ -16,13 +17,13 @@ namespace HangfireDemo.Jobs
             _logger = logger;
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var watch = Stopwatch.StartNew();
             _logger.LogInformation("starting...");
             while (watch.Elapsed < TimeSpan.FromSeconds(60))
             {
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
                 _logger.LogInformation("still working...");
             }
             _logger.LogInformation("done");

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AbdusCo.CronJobs.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
@@ -29,13 +30,13 @@ namespace HangfireDemo
         }
 
         [HttpPost("{jobName}")]
-        public async Task<IActionResult> ExecuteJob(string jobName)
+        public async Task<IActionResult> ExecuteJob(string jobName, CancellationToken cancellationToken)
         {
             Response.OnCompleted(async () =>
             {
                 var job = _jobFactory.Create(jobName);
                 _logger.LogInformation($"Executing {job}");
-                await job.ExecuteAsync();
+                await job.ExecuteAsync(cancellationToken);
                 _logger.LogInformation($"Finished {job}");
             });
 
