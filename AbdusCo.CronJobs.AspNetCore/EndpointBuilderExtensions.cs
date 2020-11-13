@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -20,12 +21,12 @@ namespace AbdusCo.CronJobs.AspNetCore
                 return context.Response.WriteAsJsonAsync(jobs);
             });
 
-            return endpoints.MapPost($"{endpoint}/{{name}}", async context =>
+            return endpoints.MapPost($"{endpoint}/{{name}}", context =>
             {
                 if (!(context.GetRouteValue("name") is string jobName))
                 {
                     context.Response.StatusCode = 404;
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 var logger = context.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JobExecutor");
@@ -40,6 +41,7 @@ namespace AbdusCo.CronJobs.AspNetCore
                 });
 
                 context.Response.StatusCode = 200;
+                return Task.CompletedTask;
             });
         }
     }
