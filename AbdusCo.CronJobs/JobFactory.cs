@@ -7,11 +7,11 @@ namespace AbdusCo.CronJobs
 {
     public class JobFactory : IJobFactory
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public JobFactory(IServiceProvider serviceProvider)
+        public JobFactory(IServiceScopeFactory scopeFactory)
         {
-            _serviceProvider = serviceProvider;
+            _scopeFactory = scopeFactory;
         }
 
         public IJob Create(string jobName)
@@ -22,13 +22,13 @@ namespace AbdusCo.CronJobs
                     t.IsClass
                     && typeof(IJob).IsAssignableFrom(t)
                     && string.Equals(t.Name, jobName, StringComparison.InvariantCultureIgnoreCase));
-            
+
             if (type == null)
             {
                 throw new TypeLoadException($"Cannot find any job named {jobName} that implements {nameof(IJob)}");
             }
 
-            return (IJob) _serviceProvider.GetRequiredService(type);
+            return (IJob) _scopeFactory.CreateScope().ServiceProvider.GetRequiredService(type);
         }
     }
 }
