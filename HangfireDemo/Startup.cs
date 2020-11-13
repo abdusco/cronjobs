@@ -26,6 +26,7 @@ namespace HangfireDemo
             services.AddCronJobs();
             
             services.AddTransient<CreateReport>();
+            services.AddTransient<ReallyLongJob>();
             
             services.AddRouting();
             services.AddControllers();
