@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
-    public class CronCronJobExecutor: ICronJobExecutor
+    public class CronJobExecutor: ICronJobExecutor
     {
-        private readonly ILogger<CronCronJobExecutor> _logger;
+        private readonly ILogger<CronJobExecutor> _logger;
 
-        public CronCronJobExecutor(ILogger<CronCronJobExecutor> logger)
+        public CronJobExecutor(ILogger<CronJobExecutor> logger)
         {
             _logger = logger;
         }
