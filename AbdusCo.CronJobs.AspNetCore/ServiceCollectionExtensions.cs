@@ -12,7 +12,7 @@ namespace AbdusCo.CronJobs.AspNetCore
     {
         public static IServiceCollection AddCronJobs(
             this IServiceCollection services,
-            Action<JobsOptions> configure = null,
+            Action<CronJobsOptions> configure = null,
             params Assembly[] assemblies
         )
         {
@@ -22,15 +22,15 @@ namespace AbdusCo.CronJobs.AspNetCore
             }
 
 
-            services.AddHttpClient<IJobBroadcaster, JobRegistrationBroadcaster>((provider, client) =>
+            services.AddHttpClient<ICronJobBroadcaster, CronJobRegistrationBroadcaster>((provider, client) =>
                 {
-                    var options = provider.GetRequiredService<IOptions<JobsOptions>>().Value;
+                    var options = provider.GetRequiredService<IOptions<CronJobsOptions>>().Value;
                     client.BaseAddress = new Uri(options.RegistrationEndpoint);
                     client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
                 })
                 .AddPolicyHandler((provider, _) =>
                 {
-                    var options = provider.GetRequiredService<IOptions<JobsOptions>>().Value;
+                    var options = provider.GetRequiredService<IOptions<CronJobsOptions>>().Value;
                     var builder = HttpPolicyExtensions
                         .HandleTransientHttpError()
                         .WaitAndRetryAsync(options.RetryCount, i => TimeSpan.FromSeconds(Math.Pow(2, i)));
@@ -38,20 +38,20 @@ namespace AbdusCo.CronJobs.AspNetCore
                 });
 
             services.AddHostedService<JobBroadcasterService>();
-            services.AddSingleton<IJobFactory, JobFactory>();
-            services.AddSingleton<IJobExecutor, CronJobExecutor>();
+            services.AddSingleton<ICronJobFactory, CronJobFactory>();
+            services.AddSingleton<ICronJobExecutor, CronCronJobExecutor>();
             
             if (assemblies.Any())
             {
-                services.AddTransient<IJobProvider, AssemblyScanningJobProvider>(delegate(IServiceProvider provider)
+                services.AddTransient<ICronJobProvider, AssemblyScanningCronCronJobProvider>(delegate(IServiceProvider provider)
                 {
-                    var options = provider.GetRequiredService<IOptions<JobsOptions>>();
-                    return new AssemblyScanningJobProvider(options, assemblies);
+                    var options = provider.GetRequiredService<IOptions<CronJobsOptions>>();
+                    return new AssemblyScanningCronCronJobProvider(options, assemblies);
                 });
             }
             else
             {
-                services.AddTransient<IJobProvider, AssemblyScanningJobProvider>();
+                services.AddTransient<ICronJobProvider, AssemblyScanningCronCronJobProvider>();
             }
 
             return services;

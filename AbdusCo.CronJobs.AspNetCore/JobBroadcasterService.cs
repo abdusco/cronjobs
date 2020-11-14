@@ -12,15 +12,15 @@ namespace AbdusCo.CronJobs.AspNetCore
 {
     internal class JobBroadcasterService : BackgroundService
     {
-        private readonly JobsOptions _options;
-        private readonly IEnumerable<IJobProvider> _jobProviders;
-        private readonly IJobBroadcaster _broadcaster;
+        private readonly CronJobsOptions _options;
+        private readonly IEnumerable<ICronJobProvider> _jobProviders;
+        private readonly ICronJobBroadcaster _broadcaster;
         private readonly ILogger<JobBroadcasterService> _logger;
 
         public JobBroadcasterService(
-            IOptions<JobsOptions> options,
-            IEnumerable<IJobProvider> jobProviders,
-            IJobBroadcaster broadcaster, ILogger<JobBroadcasterService> logger)
+            IOptions<CronJobsOptions> options,
+            IEnumerable<ICronJobProvider> jobProviders,
+            ICronJobBroadcaster broadcaster, ILogger<JobBroadcasterService> logger)
         {
             _options = options.Value;
             _jobProviders = jobProviders;
@@ -33,10 +33,10 @@ namespace AbdusCo.CronJobs.AspNetCore
             await Task.Delay(TimeSpan.FromSeconds(_options.WaitSeconds), stoppingToken);
             
             _logger.LogInformation("Finding jobs");
-            List<JobDescription> jobs;
+            List<CronJobDescription> jobs;
             try
             {
-                jobs = _jobProviders.SelectMany(p => p.Jobs).ToList();
+                jobs = _jobProviders.SelectMany(p => p.CronJobs).ToList();
                 _logger.LogInformation($"Found {jobs.Count} jobs. Broadcasting all jobs");
             }
             catch (Exception e)

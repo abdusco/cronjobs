@@ -10,11 +10,11 @@ namespace HangfireDemo.Jobs
 {
     [Cron("*/2 * * * *")]
     [Description("Performs a task that takes really long")]
-    public class ReallyLongJob: IJob
+    public class ReallyLongCronJob: ICronJob
     {
-        private readonly ILogger<ReallyLongJob> _logger;
+        private readonly ILogger<ReallyLongCronJob> _logger;
 
-        public ReallyLongJob(ILogger<ReallyLongJob> logger)
+        public ReallyLongCronJob(ILogger<ReallyLongCronJob> logger)
         {
             _logger = logger;
         }

@@ -24,9 +24,9 @@ namespace HangfireServer
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterJobs([FromBody] JobBroadcast payload)
+        public async Task<IActionResult> RegisterJobs([FromBody] CronJobBroadcast payload)
         {
-            string MakeKey(JobDescription j, int i) => $"{payload.Application}@{payload.Environment}.{j.Name}#{i}";
+            string MakeKey(CronJobDescription j, int i) => $"{payload.Application}@{payload.Environment}.{j.Name}#{i}";
 
             var app = $"{payload.Application}@{payload.Environment}";
             _logger.LogDebug("Looking for registered jobs for {Application}", app);

@@ -7,21 +7,21 @@ using Microsoft.Extensions.Hosting;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
-    internal class JobRegistrationBroadcaster : IJobBroadcaster
+    internal class CronJobRegistrationBroadcaster : ICronJobBroadcaster
     {
         private readonly HttpClient _httpClient;
         private readonly IHostEnvironment _environment;
 
-        public JobRegistrationBroadcaster(HttpClient httpClient,
+        public CronJobRegistrationBroadcaster(HttpClient httpClient,
             IHostEnvironment environment)
         {
             _httpClient = httpClient;
             _environment = environment;
         }
 
-        public Task BroadcastAsync(IEnumerable<JobDescription> jobs, CancellationToken cancellationToken)
+        public Task BroadcastAsync(IEnumerable<CronJobDescription> jobs, CancellationToken cancellationToken)
         {
-            var payload = new JobBroadcast
+            var payload = new CronJobBroadcast
             {
                 Application = _environment.ApplicationName,
                 Environment = _environment.EnvironmentName,

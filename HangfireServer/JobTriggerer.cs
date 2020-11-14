@@ -16,20 +16,20 @@ namespace HangfireServer
             _logger = logger;
         }
 
-        public async Task Trigger(JobDescription job)
+        public async Task Trigger(CronJobDescription cronJob)
         {
-            _logger.LogInformation("Triggering {Job}", job);
+            _logger.LogInformation("Triggering {Job}", cronJob);
             try
             {
                 // fire and forget
-                var res = await _http.PostAsync(job.Endpoint, new StringContent(""));
+                var res = await _http.PostAsync(cronJob.Endpoint, new StringContent(""));
             }
             catch (TaskCanceledException _)
             {
                 // ignore timeout errors
             }
 
-            _logger.LogInformation($"Sent request to {job.Endpoint}");
+            _logger.LogInformation($"Sent request to {cronJob.Endpoint}");
         }
     }
 }

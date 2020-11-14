@@ -16,8 +16,8 @@ namespace AbdusCo.CronJobs.AspNetCore
         {
             endpoints.MapGet(endpoint, context =>
             {
-                var providers = context.RequestServices.GetRequiredService<IEnumerable<IJobProvider>>();
-                var jobs = providers.SelectMany(p => p.Jobs).ToList();
+                var providers = context.RequestServices.GetRequiredService<IEnumerable<ICronJobProvider>>();
+                var jobs = providers.SelectMany(p => p.CronJobs).ToList();
                 return context.Response.WriteAsJsonAsync(jobs);
             });
 
@@ -29,8 +29,8 @@ namespace AbdusCo.CronJobs.AspNetCore
                     return Task.CompletedTask;
                 }
 
-                var factory = context.RequestServices.GetRequiredService<IJobFactory>();
-                var executor = context.RequestServices.GetRequiredService<IJobExecutor>();
+                var factory = context.RequestServices.GetRequiredService<ICronJobFactory>();
+                var executor = context.RequestServices.GetRequiredService<ICronJobExecutor>();
 
                 context.Response.OnCompleted(() =>
                 {

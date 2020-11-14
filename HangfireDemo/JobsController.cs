@@ -11,22 +11,22 @@ namespace HangfireDemo
     [Route("/-/jobs")]
     internal class JobsController : Controller
     {
-        private readonly IJobFactory _jobFactory;
-        private readonly IEnumerable<IJobProvider> _jobProviders;
+        private readonly ICronJobFactory _cronJobFactory;
+        private readonly IEnumerable<ICronJobProvider> _jobProviders;
         private readonly ILogger<JobsController> _logger;
 
-        public JobsController(IJobFactory jobFactory, IEnumerable<IJobProvider> jobProviders,
+        public JobsController(ICronJobFactory cronJobFactory, IEnumerable<ICronJobProvider> jobProviders,
             ILogger<JobsController> logger)
         {
-            _jobFactory = jobFactory;
+            _cronJobFactory = cronJobFactory;
             _jobProviders = jobProviders;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<JobDescription>>> GetTriggerableJobs()
+        public async Task<ActionResult<List<CronJobDescription>>> GetTriggerableJobs()
         {
-            return Json(_jobProviders.SelectMany(p => p.Jobs).ToList());
+            return Json(_jobProviders.SelectMany(p => p.CronJobs).ToList());
         }
 
         [HttpPost("{jobName}")]
@@ -34,7 +34,7 @@ namespace HangfireDemo
         {
             Response.OnCompleted(async () =>
             {
-                var job = _jobFactory.Create(jobName);
+                var job = _cronJobFactory.Create(jobName);
                 _logger.LogInformation($"Executing {job}");
                 await job.ExecuteAsync(cancellationToken);
                 _logger.LogInformation($"Finished {job}");

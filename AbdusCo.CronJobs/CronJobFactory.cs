@@ -5,30 +5,30 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AbdusCo.CronJobs
 {
-    public class JobFactory : IJobFactory
+    public class CronJobFactory : ICronJobFactory
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public JobFactory(IServiceScopeFactory scopeFactory)
+        public CronJobFactory(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
         }
 
-        public IJob Create(string jobName)
+        public ICronJob Create(string jobName)
         {
             var type = Assembly.GetEntryAssembly()!
                 .GetTypes()
                 .FirstOrDefault(t =>
                     t.IsClass
-                    && typeof(IJob).IsAssignableFrom(t)
+                    && typeof(ICronJob).IsAssignableFrom(t)
                     && string.Equals(t.Name, jobName, StringComparison.InvariantCultureIgnoreCase));
 
             if (type == null)
             {
-                throw new TypeLoadException($"Cannot find any job named {jobName} that implements {nameof(IJob)}");
+                throw new TypeLoadException($"Cannot find any job named {jobName} that implements {nameof(ICronJob)}");
             }
 
-            return (IJob) _scopeFactory.CreateScope().ServiceProvider.GetRequiredService(type);
+            return (ICronJob) _scopeFactory.CreateScope().ServiceProvider.GetRequiredService(type);
         }
     }
 }

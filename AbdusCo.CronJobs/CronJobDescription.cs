@@ -2,7 +2,7 @@
 
 namespace AbdusCo.CronJobs
 {
-    public class JobDescription
+    public class CronJobDescription
     {
         public string Name { get; set; }
         public string Endpoint { get; set; }

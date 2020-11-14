@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace AbdusCo.CronJobs
 {
-    public interface IJob
+    public interface ICronJob
     {
         Task ExecuteAsync(CancellationToken cancellationToken);
     }

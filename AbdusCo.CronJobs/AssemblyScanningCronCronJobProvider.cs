@@ -7,35 +7,35 @@ using Microsoft.Extensions.Options;
 
 namespace AbdusCo.CronJobs
 {
-    public class AssemblyScanningJobProvider : IJobProvider
+    public class AssemblyScanningCronCronJobProvider : ICronJobProvider
     {
         private readonly string _urlTemplate;
         private readonly Assembly[] _assemblies;
 
-        public AssemblyScanningJobProvider(IOptions<JobsOptions> options, params Assembly[] assemblies)
+        public AssemblyScanningCronCronJobProvider(IOptions<CronJobsOptions> options, params Assembly[] assemblies)
         {
             _urlTemplate = options.Value.UrlTemplate;
             _assemblies = assemblies;
         }
 
-        public AssemblyScanningJobProvider(IOptions<JobsOptions> options) : this(options,
+        public AssemblyScanningCronCronJobProvider(IOptions<CronJobsOptions> options) : this(options,
             AppDomain.CurrentDomain.GetAssemblies())
         {
         }
 
-        public IEnumerable<JobDescription> Jobs => GetJobs();
+        public IEnumerable<CronJobDescription> CronJobs => GetJobs();
 
-        private IEnumerable<JobDescription> GetJobs()
+        private IEnumerable<CronJobDescription> GetJobs()
         {
             return _assemblies.SelectMany(a => a.GetTypes())
                 .Where(t => t.IsClass
                             && !t.IsAbstract
                             && t.IsPublic
-                            && typeof(IJob).IsAssignableFrom(t))
+                            && typeof(ICronJob).IsAssignableFrom(t))
                 .Select(CreateJobDescription);
         }
 
-        private JobDescription CreateJobDescription(Type type)
+        private CronJobDescription CreateJobDescription(Type type)
         {
             var cron = type.GetCustomAttribute<CronAttribute>();
             if (cron == null)
@@ -46,7 +46,7 @@ namespace AbdusCo.CronJobs
             var description = type.GetCustomAttribute<DescriptionAttribute>()?.Description
                               ?? type.FullName;
 
-            return new JobDescription
+            return new CronJobDescription
             {
                 Name = type.Name,
                 Endpoint = _urlTemplate.Replace("{name}", type.Name.ToLowerInvariant()),

@@ -23,11 +23,11 @@ namespace HangfireDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<JobsOptions>(Configuration.GetSection(JobsOptions.Key));
+            services.Configure<CronJobsOptions>(Configuration.GetSection(CronJobsOptions.Key));
             services.AddCronJobs();
 
             services.AddTransient<CreateReport>();
-            services.AddTransient<ReallyLongJob>();
+            services.AddTransient<ReallyLongCronJob>();
 
             services.AddDbContext<DemoDbContext>(builder => builder.UseInMemoryDatabase(nameof(DemoDbContext)));
 
@@ -61,7 +61,7 @@ namespace HangfireDemo
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapCronJobWebhook("/-/jobs");
+                endpoints.MapCronJobWebhook("/-/cronjobs");
                 endpoints.MapControllers();
             });
         }
