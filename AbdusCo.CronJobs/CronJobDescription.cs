@@ -7,6 +7,6 @@ namespace AbdusCo.CronJobs
         public string Name { get; set; }
         public string Endpoint { get; set; }
         public List<string> CronExpressions { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; }
     }
 }
