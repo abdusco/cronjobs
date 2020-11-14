@@ -7,20 +7,15 @@ using Microsoft.Extensions.Options;
 
 namespace AbdusCo.CronJobs
 {
-    public class AssemblyScanningCronCronJobProvider : ICronJobProvider
+    public class AssemblyScanningCronJobProvider : ICronJobProvider
     {
         private readonly string _urlTemplate;
         private readonly Assembly[] _assemblies;
 
-        public AssemblyScanningCronCronJobProvider(IOptions<CronJobsOptions> options, params Assembly[] assemblies)
+        public AssemblyScanningCronJobProvider(IOptions<CronJobsOptions> options, params Assembly[] assemblies)
         {
             _urlTemplate = options.Value.UrlTemplate;
             _assemblies = assemblies;
-        }
-
-        public AssemblyScanningCronCronJobProvider(IOptions<CronJobsOptions> options) : this(options,
-            AppDomain.CurrentDomain.GetAssemblies())
-        {
         }
 
         public IEnumerable<CronJobDescription> CronJobs => GetJobs();

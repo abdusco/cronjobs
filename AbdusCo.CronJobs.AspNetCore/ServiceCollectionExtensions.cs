@@ -41,18 +41,17 @@ namespace AbdusCo.CronJobs.AspNetCore
             services.AddSingleton<ICronJobFactory, CronJobFactory>();
             services.AddSingleton<ICronJobExecutor, CronJobExecutor>();
             
-            if (assemblies.Any())
+            if (!assemblies.Any())
             {
-                services.AddTransient<ICronJobProvider, AssemblyScanningCronCronJobProvider>(delegate(IServiceProvider provider)
+                assemblies = new[] {Assembly.GetCallingAssembly()};
+            }
+
+            services.AddTransient<ICronJobProvider, AssemblyScanningCronJobProvider>(
+                provider =>
                 {
                     var options = provider.GetRequiredService<IOptions<CronJobsOptions>>();
-                    return new AssemblyScanningCronCronJobProvider(options, assemblies);
+                    return new AssemblyScanningCronJobProvider(options, assemblies);
                 });
-            }
-            else
-            {
-                services.AddTransient<ICronJobProvider, AssemblyScanningCronCronJobProvider>();
-            }
 
             return services;
         }

@@ -39,7 +39,7 @@ namespace AbdusCo.CronJobs.AspNetCore
                 context.Response.OnCompleted(() =>
                 {
                     var job = factory.Create(jobName);
-                    return executor.ExecuteJobAsync(job, context.RequestAborted);
+                    return executor.ExecuteJobAsync(job);
                 });
 
                 context.Response.StatusCode = StatusCodes.Status202Accepted;

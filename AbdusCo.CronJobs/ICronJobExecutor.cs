@@ -5,6 +5,6 @@ namespace AbdusCo.CronJobs
 {
     public interface ICronJobExecutor
     {
-        Task ExecuteJobAsync(ICronJob cronJob, CancellationToken cancellationToken);
+        Task ExecuteJobAsync(ICronJob cronJob);
     }
 }
