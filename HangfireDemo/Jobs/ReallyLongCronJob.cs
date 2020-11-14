@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HangfireDemo.Jobs
 {
-    [Cron("*/2 * * * *")]
+    [Cron("*/3 * * * *")]
     [Description("Performs a task that takes really long")]
     public class ReallyLongCronJob: ICronJob
     {
@@ -23,10 +23,10 @@ namespace HangfireDemo.Jobs
         {
             var watch = Stopwatch.StartNew();
             _logger.LogInformation("starting...");
-            while (watch.Elapsed < TimeSpan.FromSeconds(60) || !cancellationToken.IsCancellationRequested)
+            while (watch.Elapsed < TimeSpan.FromSeconds(70) && !cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-                _logger.LogInformation($"still working (took {watch.Elapsed.Seconds} seconds so far)...");
+                _logger.LogInformation($"still working (took {watch.Elapsed} so far)...");
             }
             _logger.LogInformation("done");
         }
