@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AbdusCo.CronJobs.Hangfire\AbdusCo.CronJobs.Hangfire.csproj" />
       <ProjectReference Include="..\AbdusCo.CronJobs\AbdusCo.CronJobs.csproj" />
     </ItemGroup>
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Json;
+using System.Net.Mime;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -19,7 +21,7 @@ namespace AbdusCo.CronJobs.AspNetCore
             _environment = environment;
         }
 
-        public Task BroadcastAsync(IEnumerable<CronJobDescription> jobs, CancellationToken cancellationToken)
+        public async Task BroadcastAsync(IEnumerable<CronJobDescription> jobs, CancellationToken cancellationToken)
         {
             var payload = new CronJobBroadcast
             {
@@ -28,7 +30,13 @@ namespace AbdusCo.CronJobs.AspNetCore
                 Jobs = jobs
             };
 
-            return _httpClient.PostAsJsonAsync("", payload, cancellationToken: cancellationToken);
+            var json = JsonSerializer.Serialize(payload);
+            var res = await _httpClient.PostAsync(
+                "",
+                new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
+                cancellationToken: cancellationToken
+            );
+            res.EnsureSuccessStatusCode();
         }
     }
 }

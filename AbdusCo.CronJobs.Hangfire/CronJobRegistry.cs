@@ -1,30 +1,26 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
-using AbdusCo.CronJobs;
 using Hangfire;
 using Hangfire.Storage;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using AbdusCo.CronJobs;
 
-namespace HangfireServer
+namespace AbdusCo.CronJobs.Hangfire
 {
-    [Route("/api/[controller]")]
-    public class JobsController : Controller
+    public class CronJobRegistry : ICronJobRegistry
     {
         private readonly IRecurringJobManager _jobManager;
         private readonly JobStorage _jobStorage;
-        private readonly ILogger<JobsController> _logger;
+        private readonly ILogger<CronJobRegistry> _logger;
 
-        public JobsController(IRecurringJobManager jobManager, JobStorage jobStorage, ILogger<JobsController> logger)
+        public CronJobRegistry(IRecurringJobManager jobManager, JobStorage jobStorage, ILogger<CronJobRegistry> logger)
         {
             _jobManager = jobManager;
             _jobStorage = jobStorage;
             _logger = logger;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegisterJobs([FromBody] CronJobBroadcast payload)
+        public void Register(CronJobBroadcast payload)
         {
             string MakeKey(CronJobDescription j, int i) => $"{payload.Application}@{payload.Environment}.{j.Name}#{i}";
 
@@ -49,7 +45,7 @@ namespace HangfireServer
                 {
                     var cron = job.CronExpressions[i];
                     var jobKey = MakeKey(job, i);
-                    _jobManager.AddOrUpdate<JobTriggerer>(
+                    _jobManager.AddOrUpdate<CronJobTriggerer>(
                         jobKey,
                         t => t.Trigger(job),
                         cron,
@@ -59,7 +55,6 @@ namespace HangfireServer
             }
 
             _logger.LogInformation($"Registered {jobs.Count} jobs for {{Application}}.", app);
-            return Ok();
         }
     }
 }

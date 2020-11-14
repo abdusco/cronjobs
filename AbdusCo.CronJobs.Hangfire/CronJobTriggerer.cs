@@ -1,16 +1,15 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using AbdusCo.CronJobs;
 using Microsoft.Extensions.Logging;
 
-namespace HangfireServer
+namespace AbdusCo.CronJobs.Hangfire
 {
-    public class JobTriggerer
+    public class CronJobTriggerer : ICronJobTriggerer
     {
         private readonly HttpClient _http;
-        private readonly ILogger<JobTriggerer> _logger;
+        private readonly ILogger<CronJobTriggerer> _logger;
 
-        public JobTriggerer(HttpClient http, ILogger<JobTriggerer> logger)
+        public CronJobTriggerer(HttpClient http, ILogger<CronJobTriggerer> logger)
         {
             _http = http;
             _logger = logger;
@@ -24,7 +23,7 @@ namespace HangfireServer
                 // fire and forget
                 var res = await _http.PostAsync(cronJob.Endpoint, new StringContent(""));
             }
-            catch (TaskCanceledException _)
+            catch (TaskCanceledException)
             {
                 // ignore timeout errors
             }

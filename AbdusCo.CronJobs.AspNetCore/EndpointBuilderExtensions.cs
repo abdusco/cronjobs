@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace AbdusCo.CronJobs.AspNetCore
 {
@@ -18,7 +19,10 @@ namespace AbdusCo.CronJobs.AspNetCore
             {
                 var providers = context.RequestServices.GetRequiredService<IEnumerable<ICronJobProvider>>();
                 var jobs = providers.SelectMany(p => p.CronJobs).ToList();
-                return context.Response.WriteAsJsonAsync(jobs);
+                
+                var payload = JsonSerializer.Serialize(jobs);
+                context.Response.ContentType = MediaTypeNames.Application.Json;
+                return context.Response.WriteAsync(payload);
             });
 
             return endpoints.MapPost($"{endpoint}/{{name:required}}", context =>

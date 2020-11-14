@@ -1,4 +1,5 @@
 using System;
+using AbdusCo.CronJobs.Hangfire;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -24,7 +25,7 @@ namespace HangfireServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClient<JobTriggerer>(client => client.Timeout = TimeSpan.FromSeconds(3));
+            services.AddCronJobServer();
             services.AddHangfire(configuration => { configuration.UseMemoryStorage(); });
             services.AddHangfireServer();
             services.AddControllers();
@@ -55,6 +56,7 @@ namespace HangfireServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapCronJobRegistry("/api/cronjobs");
                 endpoints.MapGet("/", async context => context.Response.Redirect("/hangfire"));
             });
         }
