@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace HangfireDemo
@@ -20,12 +21,10 @@ namespace HangfireDemo
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Sale>().HasData(new[]
-            {
-                new Sale {Total = 10},
-                new Sale {Total = 15},
-                new Sale {Total = 20},
-            });
+
+            var r = new Random((int) DateTime.UtcNow.Ticks);
+            var items = Enumerable.Range(0, r.Next(10, 15)).Select(i => new Sale {Total = r.Next(100)});
+            modelBuilder.Entity<Sale>().HasData(items);
         }
     }
 }
