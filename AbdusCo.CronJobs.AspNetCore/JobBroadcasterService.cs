@@ -41,13 +41,14 @@ namespace AbdusCo.CronJobs.AspNetCore
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "An error happened while getting a list of jobs");
+                _logger.LogError(e, "An error happened while listing of jobs");
                 throw;
             }
 
             try
             {
                 await _broadcaster.BroadcastAsync(jobs, stoppingToken);
+                _logger.LogInformation("Jobs have been broadcasted successfully");
             }
             catch (Exception e)
             {
